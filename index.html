@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reformada FC - Sorteador</title>
 
 <style>
@@ -13,21 +14,19 @@
         text-align: center;
     }
 
-   .header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
-}
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+    }
 
-.logo {
-    width: 155px;   /* controla o tamanho */
-    height: auto;
-    margin-bottom: 10px;
-}
-
-    
+    .logo {
+        width: 155px;
+        height: auto;
+        margin-bottom: 10px;
+    }
 
     h1 {
         margin: 10px 0 20px;
@@ -118,16 +117,54 @@
     li {
         margin: 5px 0;
     }
+
+    /* =====================
+       RESPONSIVO MOBILE
+    ===================== */
+    @media (max-width: 768px) {
+
+        .logo {
+            width: 100px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .formulario {
+            margin: 10px;
+            padding: 15px;
+        }
+
+        textarea, input {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 17px;
+        }
+
+        .times {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time {
+            width: 100%;
+            max-width: 320px;
+        }
+    }
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <img src="img\brasao_reformados_fc.jpeg" alt="Brasão Reformada FC" class="logo">
+    <img src="img/brasao_reformados_fc.jpeg" alt="Brasão Reformada FC" class="logo">
     <h1>REFORMADA FC</h1>
 </div>
-
 
 <div class="formulario">
     <label>Jogadores presentes (separados por vírgula)</label>
@@ -165,14 +202,13 @@ function sortear() {
     resultado.innerHTML = "";
 
     let nomes = entrada.split(",").map(n => n.trim()).filter(n => n);
-    if (nomes.length === 0) return alert("Digite os jogadores.");
+    if (!nomes.length) return alert("Digite os jogadores.");
 
     let jogadores = nomes.map(n => ({
         nome: n,
         score: jogadoresBase[n.toLowerCase()] ?? 6
     }));
 
-    // goleiros fixos
     const goleiros = jogadores.filter(j =>
         j.nome.toLowerCase() === "thales" || j.nome.toLowerCase() === "dêniz"
     );
@@ -188,7 +224,6 @@ function sortear() {
         soma: 0
     }));
 
-    // distribui goleiros alternadamente
     for (let i = 0; i < times.length; i++) {
         if (goleiros.length) {
             let g = goleiros[i % goleiros.length];
@@ -197,7 +232,6 @@ function sortear() {
         }
     }
 
-    // balanceamento por menor soma
     jogadores.sort((a, b) => b.score - a.score);
 
     jogadores.forEach(j => {
@@ -208,11 +242,9 @@ function sortear() {
         time.soma += j.score;
     });
 
-    // jogadores sobrando
     let alocados = times.flatMap(t => t.jogadores);
     let sobrantes = nomes.filter(n => !alocados.includes(n));
 
-    // renderiza
     times.forEach((t, i) => {
         let div = document.createElement("div");
         div.className = "time " + (i % 2 === 0 ? "vermelho" : "azul");
