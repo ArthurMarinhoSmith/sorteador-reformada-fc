@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Reformada FC - Sorteador</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #1e88c8, #000);
+        color: white;
+        text-align: center;
+    }
+
+   .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.logo {
+    width: 155px;   /* controla o tamanho */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+    
+
+    h1 {
+        margin: 10px 0 20px;
+        letter-spacing: 2px;
+    }
+
+    .formulario {
+        max-width: 600px;
+        margin: auto;
+        background: rgba(255,255,255,0.12);
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    label {
+        display: block;
+        margin-top: 12px;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    textarea, input {
+        width: 90%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        font-size: 16px;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        background: #ffd700;
+        color: #0b2c6d;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .times {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 10px;
+        flex-wrap: wrap;
+    }
+
+    .time {
+        width: 200px;
+        padding: 12px;
+        border-radius: 12px;
+        background: white;
+        color: black;
+    }
+
+    .time.vermelho {
+        background: #c62828;
+        color: white;
+    }
+
+    .time.azul {
+        background: #1565c0;
+        color: white;
+    }
+
+    .time.extra {
+        background: #f5f5f5;
+        color: black;
+    }
+
+    .time h3 {
+        margin-top: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.4);
+        padding-bottom: 5px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    li {
+        margin: 5px 0;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <img src="img\brasao_reformados_fc.jpeg" alt="Brasão Reformada FC" class="logo">
+    <h1>REFORMADA FC</h1>
+</div>
+
+
+<div class="formulario">
+    <label>Jogadores presentes (separados por vírgula)</label>
+    <textarea id="jogadores" placeholder="João, Martin, Arthur, Thales, Dêniz"></textarea>
+
+    <label>Quantidade de jogadores por time</label>
+    <input type="number" id="jogadoresPorTime" placeholder="Ex: 5">
+
+    <label>Quantos times?</label>
+    <input type="number" id="numTimes" placeholder="Ex: 4">
+
+    <button onclick="sortear()">Sortear Times</button>
+</div>
+
+<div id="resultado" class="times"></div>
+
+<script>
+const jogadoresBase = {
+    "joão": 7, "martin": 8, "arthur": 8, "júlio": 9,
+    "alex": 8, "fabinho": 9, "thales": 10,
+    "dêniz": 10, "felipe": 6, "mateus": 5,
+    "iury": 9, "jonatas": 8, "luiz holanda": 7,
+    "iranildo": 6, "biu": 8, "hermes": 7,
+    "eduardo": 8, "miguel": 8, "renato": 9,
+    "sales": 8, "severino": 8, "anderson": 7,
+    "neto lins": 8, "madson": 5
+};
+
+function sortear() {
+    const entrada = document.getElementById("jogadores").value;
+    const jogadoresPorTime = parseInt(document.getElementById("jogadoresPorTime").value);
+    const numTimes = parseInt(document.getElementById("numTimes").value);
+    const resultado = document.getElementById("resultado");
+
+    resultado.innerHTML = "";
+
+    let nomes = entrada.split(",").map(n => n.trim()).filter(n => n);
+    if (nomes.length === 0) return alert("Digite os jogadores.");
+
+    let jogadores = nomes.map(n => ({
+        nome: n,
+        score: jogadoresBase[n.toLowerCase()] ?? 6
+    }));
+
+    // goleiros fixos
+    const goleiros = jogadores.filter(j =>
+        j.nome.toLowerCase() === "thales" || j.nome.toLowerCase() === "dêniz"
+    );
+
+    jogadores = jogadores.filter(j =>
+        j.nome.toLowerCase() !== "thales" && j.nome.toLowerCase() !== "dêniz"
+    );
+
+    jogadores.sort(() => Math.random() - 0.5);
+
+    let times = Array.from({ length: numTimes }, () => ({
+        jogadores: [],
+        soma: 0
+    }));
+
+    // distribui goleiros alternadamente
+    for (let i = 0; i < times.length; i++) {
+        if (goleiros.length) {
+            let g = goleiros[i % goleiros.length];
+            times[i].jogadores.push(g.nome);
+            times[i].soma += g.score;
+        }
+    }
+
+    // balanceamento por menor soma
+    jogadores.sort((a, b) => b.score - a.score);
+
+    jogadores.forEach(j => {
+        let candidatos = times.filter(t => t.jogadores.length < jogadoresPorTime);
+        if (!candidatos.length) return;
+        let time = candidatos.reduce((a, b) => a.soma < b.soma ? a : b);
+        time.jogadores.push(j.nome);
+        time.soma += j.score;
+    });
+
+    // jogadores sobrando
+    let alocados = times.flatMap(t => t.jogadores);
+    let sobrantes = nomes.filter(n => !alocados.includes(n));
+
+    // renderiza
+    times.forEach((t, i) => {
+        let div = document.createElement("div");
+        div.className = "time " + (i % 2 === 0 ? "vermelho" : "azul");
+        div.innerHTML = `<h3>Time ${i + 1} (${t.soma})</h3><ul>` +
+            t.jogadores.map(j => `<li>${j}</li>`).join("") +
+            "</ul>";
+        resultado.appendChild(div);
+    });
+
+    if (sobrantes.length) {
+        let div = document.createElement("div");
+        div.className = "time extra";
+        div.innerHTML = `<h3>Time Extra</h3><ul>` +
+            sobrantes.map(j => `<li>${j}</li>`).join("") +
+            "</ul>";
+        resultado.appendChild(div);
+    }
+}
+</script>
+
+</body>
+</html>
