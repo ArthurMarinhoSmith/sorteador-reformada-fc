@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reformada FC - Sorteador</title>
 
 <style>
@@ -39,25 +39,51 @@
         background: rgba(255,255,255,0.12);
         padding: 20px;
         border-radius: 12px;
+        text-align: left;
+        color: white;
     }
 
     label {
         display: block;
         margin-top: 12px;
-        margin-bottom: 5px;
         font-weight: bold;
+        cursor: pointer;
     }
 
-    textarea, input {
-        width: 90%;
+    #listaJogadores {
+        max-height: 250px;
+        overflow-y: auto;
+        background: linear-gradient(135deg, #0d47a1, #1976d2);
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #1565c0;
+        margin-top: 10px;
+    }
+
+    #listaJogadores label {
+        user-select: none;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    #listaJogadores input[type="checkbox"] {
+        margin-right: 8px;
+        transform: scale(1.2);
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    input[type="number"] {
+        width: 100%;
         padding: 10px;
+        margin-top: 8px;
         border-radius: 6px;
         border: none;
         font-size: 16px;
     }
 
     button {
-        margin-top: 15px;
+        margin-top: 20px;
         padding: 12px 25px;
         border: none;
         border-radius: 8px;
@@ -66,10 +92,18 @@
         cursor: pointer;
         background: #ffd700;
         color: #0b2c6d;
+        width: 100%;
     }
 
     button:hover {
         opacity: 0.9;
+    }
+
+    #quantidadeSelecionada {
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
     }
 
     .times {
@@ -81,7 +115,7 @@
     }
 
     .time {
-        width: 200px;
+        width: 220px;
         padding: 12px;
         border-radius: 12px;
         background: white;
@@ -118,11 +152,8 @@
         margin: 5px 0;
     }
 
-    /* =====================
-       RESPONSIVO MOBILE
-    ===================== */
+    /* RESPONSIVO */
     @media (max-width: 768px) {
-
         .logo {
             width: 100px;
         }
@@ -136,8 +167,8 @@
             padding: 15px;
         }
 
-        textarea, input {
-            width: 100%;
+        #listaJogadores {
+            max-height: 180px;
         }
 
         button {
@@ -162,107 +193,196 @@
 <body>
 
 <div class="header">
-    <img src="img/brasao_reformados_fc.jpeg" alt="Brasão Reformada FC" class="logo">
+    <img src="img/brasao_reformados_fc.jpeg" alt="Brasão Reformada FC" class="logo" />
     <h1>REFORMADA FC</h1>
 </div>
 
 <div class="formulario">
-    <label>Jogadores presentes (separados por vírgula)</label>
-    <textarea id="jogadores" placeholder="João, Martin, Arthur, Thales, Dêniz"></textarea>
+    <label>Selecione os jogadores presentes:</label>
+    <div id="listaJogadores"></div>
 
-    <label>Quantidade de jogadores por time</label>
-    <input type="number" id="jogadoresPorTime" placeholder="Ex: 5">
+    <div id="quantidadeSelecionada">Jogadores selecionados: 0</div>
 
-    <label>Quantos times?</label>
-    <input type="number" id="numTimes" placeholder="Ex: 4">
+    <div id="configTimes" style="display:none; margin-top: 20px;">
+        <label for="jogadoresPorTime">Quantidade de jogadores por time</label>
+        <input type="number" id="jogadoresPorTime" placeholder="Ex: 5" min="1" />
 
-    <button onclick="sortear()">Sortear Times</button>
+        <label for="numTimes" style="margin-top: 15px;">Quantos times?</label>
+        <input type="number" id="numTimes" placeholder="Ex: 4" min="1" />
+
+        <button onclick="sortear()">Sortear Times</button>
+    </div>
 </div>
 
 <div id="resultado" class="times"></div>
 
 <script>
-const jogadoresBase = {
-    "joão": 7, "martin": 8, "arthur": 8, "júlio": 9,
-    "alex": 8, "fabinho": 9, "thales": 10,
-    "dêniz": 10, "felipe": 6, "mateus": 5,
-    "iury": 9, "jonatas": 8, "luiz holanda": 7,
-    "iranildo": 6, "biu": 8, "hermes": 7,
-    "eduardo": 8, "miguel": 8, "renato": 9,
-    "sales": 8, "severino": 8, "anderson": 7,
-    "neto lins": 8, "madson": 5
+const PESOS = {
+    idade: { novo: 1, medio: 2, velho: 3 },
+    altura: { baixo: 1, medio: 2, alto: 3 },
+    porte: { magro: 1, medio: 2, gordo: 3 }
 };
 
+function calcularOverall({ idade, altura, porte, habilidade }) {
+    return (
+        PESOS.idade[idade] +
+        PESOS.altura[altura] +
+        PESOS.porte[porte] +
+        habilidade
+    );
+}
+
+const jogadoresBase = {
+    "thales": calcularOverall({ idade:"medio", altura:"alto", porte:"gordo", habilidade:5 }),
+    "dêniz": calcularOverall({ idade:"medio", altura:"medio", porte:"gordo", habilidade:5 }),
+    "joão": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
+    "martin": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:4 }),
+    "arthur": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
+    "júlio": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:5 }),
+    "fabinho": calcularOverall({ idade:"medio", altura:"medio", porte:"gordo", habilidade:4 }),
+    "mateus": calcularOverall({ idade:"novo", altura:"baixo", porte:"magro", habilidade:3 }),
+    "iury": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:5 }),
+    "jonatas": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
+    "luiz holanda": calcularOverall({ idade:"velho", altura:"medio", porte:"medio", habilidade:3 }),
+    "iranildo": calcularOverall({ idade:"velho", altura:"medio", porte:"gordo", habilidade:3 }),
+    "biu": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
+    "hermes": calcularOverall({ idade:"medio", altura:"baixo", porte:"medio", habilidade:3 }),
+    "eduardo": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:4 }),
+    "miguel": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:4 }),
+    "renato": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:5 }),
+    "sales": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
+    "severino": calcularOverall({ idade:"velho", altura:"baixo", porte:"medio", habilidade:3 }),
+    "felipe": calcularOverall({ idade:"medio", altura:"baixo", porte:"magro", habilidade:3 }),
+    "thyago": calcularOverall({ idade:"medio", altura:"baixo", porte:"medio", habilidade:3 }),
+    "anderson": calcularOverall({ idade:"velho", altura:"alto", porte:"medio", habilidade:4 }),
+    "neto lins": calcularOverall({ idade:"medio", altura:"alto", porte:"gordo", habilidade:4 }),
+    "madson": calcularOverall({ idade:"velho", altura:"medio", porte:"gordo", habilidade:2 })
+};
+
+const listaJogadoresDiv = document.getElementById("listaJogadores");
+const quantidadeSelecionadaDiv = document.getElementById("quantidadeSelecionada");
+const configTimesDiv = document.getElementById("configTimes");
+
+function gerarListaJogadores() {
+    const nomes = Object.keys(jogadoresBase)
+        .map(n => n.charAt(0).toUpperCase() + n.slice(1))
+        .sort((a,b) => a.localeCompare(b, 'pt-BR'));
+
+    nomes.forEach(nome => {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = nome.toLowerCase();
+        checkbox.name = "jogador";
+        checkbox.addEventListener("change", atualizarSelecionados);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + nome));
+        listaJogadoresDiv.appendChild(label);
+    });
+}
+
+function atualizarSelecionados() {
+    const selecionados = document.querySelectorAll('input[name="jogador"]:checked');
+    const qtd = selecionados.length;
+    quantidadeSelecionadaDiv.textContent = `Jogadores selecionados: ${qtd}`;
+    configTimesDiv.style.display = qtd > 0 ? "block" : "none";
+    document.getElementById("resultado").innerHTML = ""; // limpa resultado ao mudar seleção
+}
+
 function sortear() {
-    const entrada = document.getElementById("jogadores").value;
+    const selecionados = Array.from(document.querySelectorAll('input[name="jogador"]:checked'))
+        .map(cb => cb.value);
+
     const jogadoresPorTime = parseInt(document.getElementById("jogadoresPorTime").value);
     const numTimes = parseInt(document.getElementById("numTimes").value);
     const resultado = document.getElementById("resultado");
 
     resultado.innerHTML = "";
 
-    let nomes = entrada.split(",").map(n => n.trim()).filter(n => n);
-    if (!nomes.length) return alert("Digite os jogadores.");
+    if(selecionados.length === 0) {
+        alert("Selecione pelo menos um jogador.");
+        return;
+    }
+    if(!jogadoresPorTime || jogadoresPorTime < 1) {
+        alert("Digite um número válido de jogadores por time.");
+        return;
+    }
+    if(!numTimes || numTimes < 1) {
+        alert("Digite um número válido de times.");
+        return;
+    }
 
-    let jogadores = nomes.map(n => ({
+    if(jogadoresPorTime * numTimes > selecionados.length) {
+        alert(`Número insuficiente de jogadores para ${numTimes} times com ${jogadoresPorTime} jogadores cada.`);
+        return;
+    }
+
+    // Preparar lista jogadores com scores
+    let jogadores = selecionados.map(n => ({
         nome: n,
         score: jogadoresBase[n.toLowerCase()] ?? 6
     }));
 
-    const goleiros = jogadores.filter(j =>
-        j.nome.toLowerCase() === "thales" || j.nome.toLowerCase() === "dêniz"
-    );
+    // Separar goleiros
+    const goleiros = jogadores.filter(j => j.nome === "thales" || j.nome === "dêniz");
+    jogadores = jogadores.filter(j => j.nome !== "thales" && j.nome !== "dêniz");
 
-    jogadores = jogadores.filter(j =>
-        j.nome.toLowerCase() !== "thales" && j.nome.toLowerCase() !== "dêniz"
-    );
+    // Embaralhar jogadores (exceto goleiros)
+    jogadores = jogadores.sort(() => Math.random() - 0.5);
 
-    jogadores.sort(() => Math.random() - 0.5);
-
+    // Criar array dos times
     let times = Array.from({ length: numTimes }, () => ({
         jogadores: [],
         soma: 0
     }));
 
-    for (let i = 0; i < times.length; i++) {
-        if (goleiros.length) {
+    // Alocar goleiros distribuindo 1 por time na ordem
+    for(let i = 0; i < times.length; i++) {
+        if(goleiros.length) {
             let g = goleiros[i % goleiros.length];
             times[i].jogadores.push(g.nome);
             times[i].soma += g.score;
         }
     }
 
-    jogadores.sort((a, b) => b.score - a.score);
+    // Ordena jogadores restantes por score desc para balancear
+    jogadores.sort((a,b) => b.score - a.score);
 
+    // Distribuir jogadores nos times balanceando soma e respeitando limite por time
     jogadores.forEach(j => {
         let candidatos = times.filter(t => t.jogadores.length < jogadoresPorTime);
-        if (!candidatos.length) return;
-        let time = candidatos.reduce((a, b) => a.soma < b.soma ? a : b);
-        time.jogadores.push(j.nome);
-        time.soma += j.score;
+        if(candidatos.length === 0) return;
+        let timeEscolhido = candidatos.reduce((a,b) => (a.soma < b.soma) ? a : b);
+        timeEscolhido.jogadores.push(j.nome);
+        timeEscolhido.soma += j.score;
     });
 
+    // Jogadores sobrantes (não alocados)
     let alocados = times.flatMap(t => t.jogadores);
-    let sobrantes = nomes.filter(n => !alocados.includes(n));
+    let sobrantes = jogadores.map(j => j.nome).filter(n => !alocados.includes(n));
 
+    // Mostrar resultados
     times.forEach((t, i) => {
         let div = document.createElement("div");
         div.className = "time " + (i % 2 === 0 ? "vermelho" : "azul");
-        div.innerHTML = `<h3>Time ${i + 1} (${t.soma})</h3><ul>` +
+        div.innerHTML = `<h3>Time ${i+1} (Overall: ${t.soma})</h3><ul>` +
             t.jogadores.map(j => `<li>${j}</li>`).join("") +
             "</ul>";
         resultado.appendChild(div);
     });
 
-    if (sobrantes.length) {
+    if(sobrantes.length) {
         let div = document.createElement("div");
         div.className = "time extra";
-        div.innerHTML = `<h3>Time Extra</h3><ul>` +
+        div.innerHTML = `<h3>Jogadores sobrantes</h3><ul>` +
             sobrantes.map(j => `<li>${j}</li>`).join("") +
             "</ul>";
         resultado.appendChild(div);
     }
 }
+
+// Gerar lista ao carregar a página
+gerarListaJogadores();
 </script>
 
 </body>
