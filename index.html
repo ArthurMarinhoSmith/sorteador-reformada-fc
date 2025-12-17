@@ -217,68 +217,64 @@
 <div id="resultado" class="times"></div>
 
 <script>
-const PESOS = {
-    idade: { novo: 1, medio: 2, velho: 3 },
-    altura: { baixo: 1, medio: 2, alto: 3 },
-    porte: { magro: 1, medio: 2, gordo: 3 }
-};
+const ALTURA = { baixo: 1, medio: 2, alto: 3 };
+const PORTE = { magro: 1, grande: 2, medio: 3 };
+const IDADE = { velho: 1, novo: 2, medio: 3 };
 
-function calcularOverall({ idade, altura, porte, habilidade }) {
-    return (
-        PESOS.idade[idade] +
-        PESOS.altura[altura] +
-        PESOS.porte[porte] +
-        habilidade
-    );
+const jogadoresBase = [
+    { nome: "João", altura: "medio", porte: "magro", idade: "novo", habilidade: 3 },
+    { nome: "Martin", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
+    { nome: "Arthur", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
+    { nome: "Júlio", altura: "alto", porte: "magro", idade: "medio", habilidade: 5 },
+    { nome: "Alex", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
+    { nome: "Fabinho", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
+    { nome: "Thales", altura: "alto", porte: "grande", idade: "novo", habilidade: 5 },
+    { nome: "Dêniz", altura: "baixo", porte: "medio", idade: "medio", habilidade: 5 },
+    { nome: "Felipe", altura: "alto", porte: "grande", idade: "medio", habilidade: 2 },
+    { nome: "Mateus", altura: "medio", porte: "grande", idade: "medio", habilidade: 1 },
+    { nome: "Iury", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
+    { nome: "Jonatas", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
+    { nome: "Luiz Holanda", altura: "alto", porte: "grande", idade: "velho", habilidade: 4 },
+    { nome: "Iranildo", altura: "medio", porte: "medio", idade: "medio", habilidade: 3 },
+    { nome: "Biu", altura: "medio", porte: "medio", idade: "velho", habilidade: 5 },
+    { nome: "Hermes", altura: "medio", porte: "medio", idade: "velho", habilidade: 4 },
+    { nome: "Eduardo", altura: "alto", porte: "medio", idade: "novo", habilidade: 4 },
+    { nome: "Miguel", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
+    { nome: "Renato", altura: "alto", porte: "medio", idade: "velho", habilidade: 5 },
+    { nome: "Sales", altura: "medio", porte: "grande", idade: "novo", habilidade: 4 },
+    { nome: "Severino", altura: "baixo", porte: "medio", idade: "velho", habilidade: 5 },
+    { nome: "Anderson", altura: "alto", porte: "medio", idade: "velho", habilidade: 4 },
+    { nome: "Neto Lins", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
+    { nome: "Madson", altura: "medio", porte: "grande", idade: "velho", habilidade: 2 },
+    { nome: "Thyago", altura: "baixo", porte: "medio", idade: "medio", habilidade: 2 }
+];
+
+function calcularOverall(jogador) {
+    return IDADE[jogador.idade] + ALTURA[jogador.altura] + PORTE[jogador.porte] + jogador.habilidade;
 }
-
-const jogadoresBase = {
-    "thales": calcularOverall({ idade:"medio", altura:"alto", porte:"gordo", habilidade:5 }),
-    "dêniz": calcularOverall({ idade:"medio", altura:"medio", porte:"gordo", habilidade:5 }),
-    "joão": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
-    "martin": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:4 }),
-    "arthur": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
-    "júlio": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:5 }),
-    "fabinho": calcularOverall({ idade:"medio", altura:"medio", porte:"gordo", habilidade:4 }),
-    "mateus": calcularOverall({ idade:"novo", altura:"baixo", porte:"magro", habilidade:3 }),
-    "iury": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:5 }),
-    "jonatas": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
-    "luiz holanda": calcularOverall({ idade:"velho", altura:"medio", porte:"medio", habilidade:3 }),
-    "iranildo": calcularOverall({ idade:"velho", altura:"medio", porte:"gordo", habilidade:3 }),
-    "biu": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
-    "hermes": calcularOverall({ idade:"medio", altura:"baixo", porte:"medio", habilidade:3 }),
-    "eduardo": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:4 }),
-    "miguel": calcularOverall({ idade:"novo", altura:"medio", porte:"magro", habilidade:4 }),
-    "renato": calcularOverall({ idade:"medio", altura:"alto", porte:"medio", habilidade:5 }),
-    "sales": calcularOverall({ idade:"medio", altura:"medio", porte:"medio", habilidade:4 }),
-    "severino": calcularOverall({ idade:"velho", altura:"baixo", porte:"medio", habilidade:3 }),
-    "felipe": calcularOverall({ idade:"medio", altura:"baixo", porte:"magro", habilidade:3 }),
-    "thyago": calcularOverall({ idade:"medio", altura:"baixo", porte:"medio", habilidade:3 }),
-    "anderson": calcularOverall({ idade:"velho", altura:"alto", porte:"medio", habilidade:4 }),
-    "neto lins": calcularOverall({ idade:"medio", altura:"alto", porte:"gordo", habilidade:4 }),
-    "madson": calcularOverall({ idade:"velho", altura:"medio", porte:"gordo", habilidade:2 })
-};
 
 const listaJogadoresDiv = document.getElementById("listaJogadores");
 const quantidadeSelecionadaDiv = document.getElementById("quantidadeSelecionada");
 const configTimesDiv = document.getElementById("configTimes");
 
 function gerarListaJogadores() {
-    const nomes = Object.keys(jogadoresBase)
-        .map(n => n.charAt(0).toUpperCase() + n.slice(1))
-        .sort((a,b) => a.localeCompare(b, 'pt-BR'));
-
-    nomes.forEach(nome => {
-        const label = document.createElement("label");
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = nome.toLowerCase();
-        checkbox.name = "jogador";
-        checkbox.addEventListener("change", atualizarSelecionados);
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(" " + nome));
-        listaJogadoresDiv.appendChild(label);
-    });
+    // Mostrar lista dos jogadoresBase com checkbox
+    jogadoresBase
+        .sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'))
+        .forEach(jogador => {
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = jogador.nome.toLowerCase();
+            checkbox.name = "jogador";
+            checkbox.checked = (jogador.nome.toLowerCase() === "thales" || jogador.nome.toLowerCase() === "dêniz"); // Thales e Deniz já marcados
+            checkbox.disabled = (jogador.nome.toLowerCase() === "thales" || jogador.nome.toLowerCase() === "dêniz"); // Não pode desmarcar
+            checkbox.addEventListener("change", atualizarSelecionados);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(" " + jogador.nome));
+            listaJogadoresDiv.appendChild(label);
+        });
+    atualizarSelecionados();
 }
 
 function atualizarSelecionados() {
@@ -299,83 +295,108 @@ function sortear() {
 
     resultado.innerHTML = "";
 
-    if(selecionados.length === 0) {
+    if (selecionados.length === 0) {
         alert("Selecione pelo menos um jogador.");
         return;
     }
-    if(!jogadoresPorTime || jogadoresPorTime < 1) {
+    if (!jogadoresPorTime || jogadoresPorTime < 1) {
         alert("Digite um número válido de jogadores por time.");
         return;
     }
-    if(!numTimes || numTimes < 1) {
+    if (!numTimes || numTimes < 1) {
         alert("Digite um número válido de times.");
         return;
     }
 
-    if(jogadoresPorTime * numTimes > selecionados.length) {
+    if (jogadoresPorTime * numTimes > selecionados.length) {
         alert(`Número insuficiente de jogadores para ${numTimes} times com ${jogadoresPorTime} jogadores cada.`);
         return;
     }
 
     // Preparar lista jogadores com scores
-    let jogadores = selecionados.map(n => ({
-        nome: n,
-        score: jogadoresBase[n.toLowerCase()] ?? 6
-    }));
+    let jogadores = selecionados.map(nome => {
+        const jogadorObj = jogadoresBase.find(j => j.nome.toLowerCase() === nome);
+        return {
+            nome: jogadorObj.nome,
+            score: calcularOverall(jogadorObj)
+        };
+    });
 
-    // Separar goleiros
-    const goleiros = jogadores.filter(j => j.nome === "thales" || j.nome === "dêniz");
-    jogadores = jogadores.filter(j => j.nome !== "thales" && j.nome !== "dêniz");
+    // Separa goleiros fixos (Thales e Dêniz)
+    const goleiros = jogadores.filter(j => j.nome.toLowerCase() === "thales" || j.nome.toLowerCase() === "dêniz");
 
-    // Embaralhar jogadores (exceto goleiros)
-    jogadores = jogadores.sort(() => Math.random() - 0.5);
+    // Remove goleiros da lista para distribuir só os outros
+    jogadores = jogadores.filter(j => j.nome.toLowerCase() !== "thales" && j.nome.toLowerCase() !== "dêniz");
 
-    // Criar array dos times
+    // Array para times
     let times = Array.from({ length: numTimes }, () => ({
         jogadores: [],
         soma: 0
     }));
 
-    // Alocar goleiros distribuindo 1 por time na ordem
-    for(let i = 0; i < times.length; i++) {
-        if(goleiros.length) {
-            let g = goleiros[i % goleiros.length];
-            times[i].jogadores.push(g.nome);
-            times[i].soma += g.score;
-        }
+    // Distribuir goleiros fixos alternadamente nos times
+    for (let i = 0; i < numTimes; i++) {
+        const goleiro = goleiros[i % goleiros.length];
+        times[i].jogadores.push(goleiro.nome);
+        times[i].soma += goleiro.score;
     }
 
-    // Ordena jogadores restantes por score desc para balancear
-    jogadores.sort((a,b) => b.score - a.score);
+    // Shuffle jogadores restantes para variar os sorteios
+    jogadores = jogadores.sort(() => Math.random() - 0.5);
 
-    // Distribuir jogadores nos times balanceando soma e respeitando limite por time
-    jogadores.forEach(j => {
+    // Função para tentar distribuir jogadores tentando equilibrar os times
+    // Também poderá deixar jogadores sobrantes para manter o equilíbrio
+    const maxDifference = 5; // diferença máxima aceitável de overall para incluir jogador no time
+
+    // Tentativa de distribuir jogadores nos times
+    let sobrantes = [];
+
+    jogadores.forEach(jogador => {
+        // candidatos são times que não estão cheios
         let candidatos = times.filter(t => t.jogadores.length < jogadoresPorTime);
-        if(candidatos.length === 0) return;
-        let timeEscolhido = candidatos.reduce((a,b) => (a.soma < b.soma) ? a : b);
-        timeEscolhido.jogadores.push(j.nome);
-        timeEscolhido.soma += j.score;
-    });
 
-    // Jogadores sobrantes (não alocados)
-    let alocados = times.flatMap(t => t.jogadores);
-    let sobrantes = jogadores.map(j => j.nome).filter(n => !alocados.includes(n));
+        if (candidatos.length === 0) {
+            // Todos os times cheios, jogador fica sobrante
+            sobrantes.push(jogador);
+            return;
+        }
+
+        // Seleciona o time que tem menor soma overall
+        candidatos.sort((a,b) => a.soma - b.soma);
+
+        // Verifica se jogador pode entrar no time com menor soma sem causar desequilíbrio
+        // Se a diferença entre o time mais forte e o time atual for maior que maxDifference, permite jogador para equilibrar
+        // Senão, jogador fica sobrante para tentar manter equilíbrio
+
+        let timeMaisForte = Math.max(...times.map(t => t.soma));
+        let timeMaisFraco = candidatos[0];
+
+        if ((timeMaisForte - (timeMaisFraco.soma + jogador.score)) <= maxDifference) {
+            // Pode adicionar no time
+            timeMaisFraco.jogadores.push(jogador.nome);
+            timeMaisFraco.soma += jogador.score;
+        } else {
+            // Jogador fica sobrante
+            sobrantes.push(jogador);
+        }
+    });
 
     // Mostrar resultados
     times.forEach((t, i) => {
+        const classe = (i % 2 === 0) ? "vermelho" : "azul";
         let div = document.createElement("div");
-        div.className = "time " + (i % 2 === 0 ? "vermelho" : "azul");
+        div.className = "time " + classe;
         div.innerHTML = `<h3>Time ${i+1} (Overall: ${t.soma})</h3><ul>` +
             t.jogadores.map(j => `<li>${j}</li>`).join("") +
             "</ul>";
         resultado.appendChild(div);
     });
 
-    if(sobrantes.length) {
+    if (sobrantes.length > 0) {
         let div = document.createElement("div");
         div.className = "time extra";
         div.innerHTML = `<h3>Jogadores sobrantes</h3><ul>` +
-            sobrantes.map(j => `<li>${j}</li>`).join("") +
+            sobrantes.map(j => `<li>${j.nome}</li>`).join("") +
             "</ul>";
         resultado.appendChild(div);
     }
