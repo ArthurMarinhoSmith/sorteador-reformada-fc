@@ -32,7 +32,9 @@ const baseJogadores = [
     { nome: "Severino", altura: "baixo", porte: "medio", idade: "velho", habilidade: 5 },
     { nome: "Anderson", altura: "alto", porte: "medio", idade: "velho", habilidade: 4 },
     { nome: "Neto Lins", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
-    { nome: "Madson", altura: "medio", porte: "grande", idade: "velho", habilidade: 2 }
+    { nome: "Madson", altura: "medio", porte: "grande", idade: "velho", habilidade: 2 },
+    {nome: "Chris", altura: "alto", porte: "medio", idade: "velho", habilidade: 3},
+    {nome: "Elias", altura: "medio", porte: "gordo", idade: "medio", habilidade: 4}
 ];
 
 // ========================
