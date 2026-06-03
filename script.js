@@ -1,124 +1,162 @@
-// ========================
-// CONVERSÕES
-// ========================
-const ALTURA = { baixo: 1, medio: 2, alto: 3 };
-const PORTE = { magro: 1, grande: 2, medio: 3 };
-const IDADE = { velho: 1, novo: 2, medio: 3 };
+import random
 
-// ========================
-// BASE DE JOGADORES
-// ========================
-const baseJogadores = [
-    { nome: "João", altura: "medio", porte: "magro", idade: "novo", habilidade: 3 },
-    { nome: "Martin", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Arthur", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Júlio", altura: "alto", porte: "magro", idade: "medio", habilidade: 5 },
-    { nome: "Alex", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Fabinho", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Thales", altura: "alto", porte: "grande", idade: "novo", habilidade: 5 },
-    { nome: "Dêniz", altura: "baixo", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Felipe", altura: "alto", porte: "grande", idade: "medio", habilidade: 2 },
-    { nome: "Mateus", altura: "medio", porte: "grande", idade: "medio", habilidade: 1 },
-    { nome: "Iury", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Jonatas", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
-    { nome: "Luiz Holanda", altura: "alto", porte: "grande", idade: "velho", habilidade: 4 },
-    { nome: "Iranildo", altura: "medio", porte: "medio", idade: "medio", habilidade: 3 },
-    { nome: "Biu", altura: "medio", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Hermes", altura: "medio", porte: "medio", idade: "velho", habilidade: 4 },
-    { nome: "Eduardo", altura: "alto", porte: "medio", idade: "novo", habilidade: 4 },
-    { nome: "Miguel", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Renato", altura: "alto", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Sales", altura: "medio", porte: "grande", idade: "novo", habilidade: 4 },
-    { nome: "Severino", altura: "baixo", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Anderson", altura: "alto", porte: "medio", idade: "velho", habilidade: 4 },
-    { nome: "Neto Lins", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
-    { nome: "Madson", altura: "medio", porte: "grande", idade: "velho", habilidade: 2 },
-    {nome: "Chris", altura: "alto", porte: "medio", idade: "velho", habilidade: 3},
-    {nome: "Elias", altura: "medio", porte: "gordo", idade: "medio", habilidade: 4}
+# ========================
+# CONVERSÕES INTERNAS
+# ========================
+ALTURA = {"baixo": 1, "alto": 2, "medio": 3}
+PORTE = {"magro": 1, "grande": 2, "medio": 3}
+IDADE = {"velho": 1, "novo": 2, "medio": 3}
+HABILIDADE ={ "1": 1, "2": 2, "3": 3, "4": 4, "5": 5}
+# 1 passe / chute / desarme
+# 2 marcação / posicionamento / finalização
+# 3 visao de jogo / drible
+# 4 velocidade / reflexo
+# 5 Nunca vai ter 3 deles no mesmo time!
+
+
+# ========================
+# BASE DE JOGADORES
+# ========================
+base_jogadores = [
+    { "nome": "João", "nota": 3 },
+    { "nome": "Martin", "nota": 4 },
+    { "nome": "Arthur", "nota": 5 },
+    { "nome": "Júlio", "nota": 5 },
+    { "nome": "Alex", "nota": 3 },
+    { "nome": "Fabinho", "nota": 5 },
+    { "nome": "Thales", "nota": 4 },
+    { "nome": "Dêniz", "nota": 5 },
+    { "nome": "Felipe", "nota": 2 },
+    { "nome": "Mateus", "nota": 2 },
+    { "nome": "Iury", "nota": 5 },
+    { "nome": "Jonatas", "nota": 4 },
+    { "nome": "Luiz Holanda", "nota": 4 },
+    { "nome": "Iranildo", "nota": 2 },
+    { "nome": "Biu", "nota": 5 },
+    { "nome": "Hermes", "nota": 4 },
+    { "nome": "Eduardo", "nota": 4 },
+    { "nome": "Miguel", "nota": 2 },
+    { "nome": "Renato", "nota": 5 },
+    { "nome": "Sales", "nota": 3 },
+    { "nome": "Severino", "nota": 4 },
+    { "nome": "Anderson", "nota": 3 },
+    { "nome": "Neto Lins", "nota": 2 },
+    { "nome": "Madson", "nota": 3 },
+    { "nome": "Thyago", "nota": 3 },
+    { "nome": "Chris", "nota": 2 },
+    { "nome": "Elias", "nota": 4 }
 ];
 
-// ========================
-// FUNÇÕES
-// ========================
-function calcularOverall(j) {
-    return ALTURA[j.altura] + PORTE[j.porte] + IDADE[j.idade] + j.habilidade;
-}
+# ========================
+# FUNÇÕES
+# ========================
 
-function shuffle(arr) {
-    return arr.sort(() => Math.random() - 0.5);
-}
+def calcular_overall(j):
+    return j["nota"]
 
-function sortear() {
-    const entrada = document.getElementById("jogadores").value;
-    const numTimes = Number(document.getElementById("numTimes").value);
-    const nomes = entrada.split(",").map(n => n.trim().toLowerCase());
+def montar_times_balanceados(jogadores, num_times, pessoas_por_time, goleiros_fixos):
+    # Inicializa os times
+    times = [{"jogadores": [], "soma": 0} for _ in range(num_times)]
 
-    let jogadores = baseJogadores
-        .filter(j => nomes.includes(j.nome.toLowerCase()))
-        .map(j => ({ ...j, score: calcularOverall(j) }));
+    # Distribui goleiros fixos alternadamente (um por time, repetindo se necessário)
+    for i in range(num_times):
+        goleiro = goleiros_fixos[i % len(goleiros_fixos)]
+        times[i]["jogadores"].append(goleiro["nome"])
+        times[i]["soma"] += goleiro["_score"]
 
-    if (jogadores.length === 0) return;
+    nomes_goleiros = [g["nome"] for g in goleiros_fixos]
+    outros_jogadores = [j for j in jogadores if j["nome"] not in nomes_goleiros]
 
-    const goleiros = jogadores.filter(j => j.nome === "Thales" || j.nome === "Dêniz");
-    if (goleiros.length < 2) {
-        alert("Thales e Dêniz precisam estar presentes");
-        return;
-    }
+    # Ordena jogadores do maior para o menor score
+    outros_jogadores_sorted = sorted(outros_jogadores, key=lambda x: x["_score"], reverse=True)
 
-    const outros = jogadores.filter(j => j.nome !== "Thales" && j.nome !== "Dêniz");
+    # Distribui jogadores tentando equilibrar
+    for j in outros_jogadores_sorted:
+        times_validos = [t for t in times if len(t["jogadores"]) < pessoas_por_time]
+        if not times_validos:
+            break
+        # Coloca no time com menor soma
+        time = min(times_validos, key=lambda t: t["soma"])
+        time["jogadores"].append(j["nome"])
+        time["soma"] += j["_score"]
 
-    const basePorTime = Math.floor(outros.length / numTimes);
-    const maxPorTime = basePorTime + 1;
+    return times
 
-    let melhor = null;
-    let melhorDiff = Infinity;
+def diferenca_times(times):
+    somas = [t["soma"] for t in times]
+    return max(somas) - min(somas)
 
-    for (let t = 0; t < 800; t++) {
-        let times = Array.from({ length: numTimes }, (_, i) => ({
-            jogadores: [goleiros[i % 2].nome],
-            soma: goleiros[i % 2].score
-        }));
+def sortear_times(jogadores, num_times, nomes_goleiros):
+    total_presentes = len(jogadores)
 
-        shuffle(outros).sort((a, b) => b.score - a.score).forEach(j => {
-            const validos = times.filter(t => t.jogadores.length < maxPorTime);
-            if (!validos.length) return;
-            const alvo = validos.reduce((a, b) => a.soma < b.soma ? a : b);
-            alvo.jogadores.push(j.nome);
-            alvo.soma += j.score;
-        });
+   
 
-        const somas = times.map(t => t.soma);
-        const diff = Math.max(...somas) - Math.min(...somas);
 
-        if (diff < melhorDiff) {
-            melhorDiff = diff;
-            melhor = times;
-        }
-    }
 
-    const usados = new Set(melhor.flatMap(t => t.jogadores));
-    const sobrantes = jogadores.filter(j => !usados.has(j.nome));
+    # Calcula quantidade ideal de jogadores por time (sem contar goleiros fixos)
 
-    render(melhor, sobrantes);
-}
 
-function render(times, sobrantes) {
-    const div = document.getElementById("resultado");
-    div.innerHTML = "";
+    # Define tamanho fixo para os times principais (goleiro + base_por_time)
+    pessoas_por_time = base_por_time + 1
 
-    times.forEach((t, i) => {
-        div.innerHTML += `
-        <div class="time">
-            <strong>Time ${i + 1} (Total ${t.soma})</strong>
-            <ul>${t.jogadores.map(j => `<li>${j}</li>`).join("")}</ul>
-        </div>`;
-    });
+    # Monta os times principais
+    melhor_times = None
+    melhor_diff = float("inf")
 
-    if (sobrantes.length) {
-        div.innerHTML += `
-        <div class="time">
-            <strong>Time Extra (${sobrantes.length})</strong>
-            <ul>${sobrantes.map(j => `<li>${j.nome}</li>`).join("")}</ul>
-        </div>`;
-    }
-}
+    TENTATIVAS = 1000
+
+    for _ in range(TENTATIVAS):
+        random.shuffle(jogadores)
+        times = montar_times_balanceados(jogadores, num_times, pessoas_por_time, nomes_goleiros)
+        diff = diferenca_times(times)
+        if diff < melhor_diff:
+            melhor_diff = diff
+            melhor_times = times
+
+    # Verifica se sobraram jogadores
+    jogadores_alocados = set(nome for time in melhor_times for nome in time["jogadores"])
+    sobrantes = [j for j in jogadores if j["nome"] not in jogadores_alocados]
+
+    return melhor_times, sobrantes
+
+def mostrar_times(times, sobrantes):
+    print("\n=== REFORMADA FC ===")
+    for i, time in enumerate(times, start=1):
+        print(f"\nTime {i} (Total: {time['soma']}) - Jogadores: {len(time['jogadores'])}")
+        for nome in time["jogadores"]:
+            print(f" - {nome}")
+
+    if sobrantes:
+        print(f"\n=== TIME EXTRA COM {len(sobrantes)} JOGADORES SOBRANDO ===")
+        for j in sobrantes:
+            print(f" - {j['nome']}")
+
+# ========================
+# MAIN LOOP
+# ========================
+
+entrada = input("Digite os nomes dos jogadores presentes, separados por vírgula:\n")
+nomes_presentes = [nome.strip() for nome in entrada.split(",")]
+
+jogadores = [j for j in base_jogadores if j["nome"].lower() in [n.lower() for n in nomes_presentes]]
+
+if not jogadores:
+    raise ValueError("Nenhum jogador válido foi selecionado.")
+
+print(f"\nTotal de jogadores presentes: {len(jogadores)}\n")
+
+num_times = int(input("Quantos times? "))
+
+while True:
+    try:
+        times, sobrantes = sortear_times(jogadores, num_times, nomes_goleiros=)
+        mostrar_times(times, sobrantes)
+    except ValueError as e:
+        print(f"Erro: {e}")
+        break
+
+    opcao = input("\nQuer sortear novamente? (s/n): ").strip().lower()
+    if opcao != "s":
+        print("=== REFORMADA FC ===")
+        break
+
