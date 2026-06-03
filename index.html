@@ -198,62 +198,91 @@
 </div>
 
 <div class="formulario">
+
     <label>Selecione os jogadores presentes:</label>
     <div id="listaJogadores"></div>
 
-    <div id="quantidadeSelecionada">Jogadores selecionados: 0</div>
-
-    <div id="configTimes" style="display:none; margin-top: 20px;">
-        <label for="jogadoresPorTime">Quantidade de jogadores por time</label>
-        <input type="number" id="jogadoresPorTime" placeholder="Ex: 5" min="1" />
-
-        <label for="numTimes" style="margin-top: 15px;">Quantos times?</label>
-        <input type="number" id="numTimes" placeholder="Ex: 4" min="1" />
-
-        <button onclick="sortear()">Sortear Times</button>
+    <div id="quantidadeSelecionada">
+        Jogadores selecionados: 0
     </div>
+
+    <div id="configTimes" style="display:none; margin-top:20px;">
+
+        <label for="numTimes">
+            Quantos times?
+        </label>
+
+        <input
+            type="number"
+            id="numTimes"
+            placeholder="Ex: 2"
+            min="2"
+        />
+
+        <button onclick="escolherGoleiros()">
+            Continuar
+        </button>
+
+    </div>
+
+    <div id="goleirosContainer" style="display:none; margin-top:20px;">
+
+        <h3>Escolha os goleiros</h3>
+
+        <p>
+            Selecione exatamente a mesma quantidade de goleiros que a quantidade de times.
+        </p>
+
+        <div id="listaGoleiros"></div>
+
+        <button onclick="sortear()">
+            ⚽ Sortear Times
+        </button>
+
+    </div>
+
 </div>
 
 <div id="resultado" class="times"></div>
 
 <script>
-const ALTURA = { baixo: 1, medio: 2, alto: 3 };
-const PORTE = { magro: 1, grande: 2, medio: 3 };
-const IDADE = { velho: 1, novo: 2, medio: 3 };
 
 const jogadoresBase = [
-    { nome: "João", altura: "medio", porte: "magro", idade: "novo", habilidade: 3 },
-    { nome: "Martin", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Arthur", altura: "medio", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Júlio", altura: "alto", porte: "magro", idade: "medio", habilidade: 5 },
-    { nome: "Alex", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Fabinho", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Thales", altura: "alto", porte: "grande", idade: "novo", habilidade: 5 },
-    { nome: "Dêniz", altura: "baixo", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Felipe", altura: "alto", porte: "grande", idade: "medio", habilidade: 2 },
-    { nome: "Mateus", altura: "medio", porte: "grande", idade: "medio", habilidade: 1 },
-    { nome: "Iury", altura: "medio", porte: "medio", idade: "medio", habilidade: 5 },
-    { nome: "Jonatas", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
-    { nome: "Luiz Holanda", altura: "alto", porte: "grande", idade: "velho", habilidade: 4 },
-    { nome: "Iranildo", altura: "medio", porte: "medio", idade: "medio", habilidade: 3 },
-    { nome: "Biu", altura: "medio", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Hermes", altura: "medio", porte: "medio", idade: "velho", habilidade: 4 },
-    { nome: "Eduardo", altura: "alto", porte: "medio", idade: "novo", habilidade: 4 },
-    { nome: "Miguel", altura: "alto", porte: "magro", idade: "novo", habilidade: 4 },
-    { nome: "Renato", altura: "alto", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Sales", altura: "medio", porte: "grande", idade: "novo", habilidade: 4 },
-    { nome: "Severino", altura: "baixo", porte: "medio", idade: "velho", habilidade: 5 },
-    { nome: "Anderson", altura: "alto", porte: "medio", idade: "velho", habilidade: 4 },
-    { nome: "Neto Lins", altura: "alto", porte: "grande", idade: "medio", habilidade: 4 },
-    { nome: "Madson", altura: "medio", porte: "grande", idade: "velho", habilidade: 2 },
-    { nome: "Thyago", altura: "baixo", porte: "medio", idade: "medio", habilidade: 2 }
-    {nome: "Chris", altura: "alto", porte: "medio", idade: "velho", habilidade: 3},
-    {nome: "Elias", altura: "medio", porte: "gordo", idade: "medio", habilidade: 4},
+    { nome: "João", nota: 3 },
+    { nome: "Martin", nota: 4 },
+    { nome: "Arthur", nota: 5 },
+    { nome: "Júlio", nota: 5 },
+    { nome: "Alex", nota: 3 },
+    { nome: "Fabinho", nota: 5 },
+    { nome: "Thales", nota: 4 },
+    { nome: "Dêniz", nota: 5 },
+    { nome: "Felipe", nota: 2 },
+    { nome: "Mateus", nota: 2 },
+    { nome: "Iury", nota: 5 },
+    { nome: "Jonatas", nota: 4 },
+    { nome: "Luiz Holanda", nota: 4 },
+    { nome: "Iranildo", nota: 2 },
+    { nome: "Biu", nota: 5 },
+    { nome: "Hermes", nota: 4 },
+    { nome: "Eduardo", nota: 4 },
+    { nome: "Miguel", nota: 2 },
+    { nome: "Renato", nota: 5 },
+    { nome: "Sales", nota: 3 },
+    { nome: "Severino", nota: 4 },
+    { nome: "Anderson", nota: 3 },
+    { nome: "Neto Lins", nota: 2 },
+    { nome: "Madson", nota: 3 },
+    { nome: "Thyago", nota: 3 },
+    { nome: "Chris", nota: 2 },
+    { nome: "Elias", nota: 4 }
 ];
 
+
+
 function calcularOverall(jogador) {
-    return IDADE[jogador.idade] + ALTURA[jogador.altura] + PORTE[jogador.porte] + jogador.habilidade;
-}
+    return jogador.nota;
+
+}   
 
 const listaJogadoresDiv = document.getElementById("listaJogadores");
 const quantidadeSelecionadaDiv = document.getElementById("quantidadeSelecionada");
@@ -324,34 +353,53 @@ function sortear() {
         };
     });
 
-    // Separa goleiros fixos (Thales e Dêniz)
-    const goleiros = jogadores.filter(j => j.nome.toLowerCase() === "thales" || j.nome.toLowerCase() === "dêniz");
+    // Sortear jogadores
+    // Goleiros escolhidos pelo usuário
+const goleirosSelecionados = Array.from(
+    document.querySelectorAll(".goleiro:checked")
+).map(g => g.value);
 
-    // Remove goleiros da lista para distribuir só os outros
-    jogadores = jogadores.filter(j => j.nome.toLowerCase() !== "thales" && j.nome.toLowerCase() !== "dêniz");
+// Validação
+if (goleirosSelecionados.length !== numTimes) {
+    alert(
+        `Selecione exatamente ${numTimes} goleiro(s).`
+    );
+    return;
+}
 
-    // Array para times
-    let times = Array.from({ length: numTimes }, () => ({
+// Busca os objetos dos goleiros
+const goleiros = jogadores.filter(j =>
+    goleirosSelecionados.includes(
+        j.nome.toLowerCase()
+    )
+);
+
+// Remove goleiros da lista principal
+jogadores = jogadores.filter(j =>
+    !goleirosSelecionados.includes(
+        j.nome.toLowerCase()
+    )
+);
+
+// Cria os times
+let times = Array.from(
+    { length: numTimes },
+    () => ({
         jogadores: [],
         soma: 0
-    }));
+    })
+);
 
-    // Distribuir goleiros fixos alternadamente nos times
-    for (let i = 0; i < numTimes; i++) {
-        const goleiro = goleiros[i % goleiros.length];
-        times[i].jogadores.push(goleiro.nome);
-        times[i].soma += goleiro.score;
-    }
+// Coloca 1 goleiro em cada time
+goleiros.forEach((goleiro, index) => {
 
-    // Shuffle jogadores restantes para variar os sorteios
-    jogadores = jogadores.sort(() => Math.random() - 0.5);
+    times[index].jogadores.push(
+        "🥅 " + goleiro.nome
+    );
 
-    // Função para tentar distribuir jogadores tentando equilibrar os times
-    // Também poderá deixar jogadores sobrantes para manter o equilíbrio
-    const maxDifference = 5; // diferença máxima aceitável de overall para incluir jogador no time
+    times[index].soma += goleiro.score;
 
-    // Tentativa de distribuir jogadores nos times
-    let sobrantes = [];
+});
 
     jogadores.forEach(jogador => {
         // candidatos são times que não estão cheios
